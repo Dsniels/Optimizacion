@@ -8,7 +8,7 @@ using namespace std;
 void PrintTour(std::vector<int> tour) {
     cout<<"Tour: ";
     for (int node : tour) {
-        cout << node + 1 << " ";
+        cout<< " -> " << node + 1 ;
     }
     
 

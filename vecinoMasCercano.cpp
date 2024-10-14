@@ -6,7 +6,7 @@
 using namespace std;
 
 extern int n;
-extern int distancia;
+extern double distancia;
 
 vector<int> vecinoMasCercano(const vector<vector<double>> &matriz, int inicio, int n)
 {

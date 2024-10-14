@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int distancia = 0;
+double distancia = 0;
 vector<vector<double>> Matriz10 = {
     {0.0, 28.0, 41.0, 31.0, 61.0, 32.0, 21.0, 42.0, 8.0, 56.0},
     {28.0, 0.0, 41.0, 35.0, 61.0, 52.0, 35.0, 15.0, 35.0, 30.0},
