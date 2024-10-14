@@ -10,6 +10,7 @@ extern double distancia;
 
 vector<int> vecinoMasCercano(const vector<vector<double>> &matriz, int inicio, int n)
 {
+    distancia =0;
     vector<int> tour;
     vector<bool> visitado(n, false);
     int nodoActual = inicio;

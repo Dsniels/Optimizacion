@@ -154,16 +154,16 @@ vector<vector<double>> matriz76 = {
 
 vector<int> ArcoMinimo(const vector<vector<double>> &matriz)
 {
-    double maxArc = INT32_MAX;
+    double minArc = INT32_MAX;
     int NodoInicio = -1;
     int N = matriz[0].size();
     for (int i = 0; i < N; ++i)
     {
         for (int j = 0; j < N; ++j)
         {
-            if (i != j && matriz[i][j] < maxArc)
+            if (i != j && matriz[i][j] < minArc)
             {
-                maxArc = matriz[i][j];
+                minArc = matriz[i][j];
                 NodoInicio = i;
             }
         }
