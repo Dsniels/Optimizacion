@@ -189,9 +189,11 @@ vector<int> incioConMayorDiferencia(vector<vector<double>> &matriz)
 
     for (int i = 0; i < n; i++)
     {
+        if(diferencias[i] > maximo){
+            maximo = diferencias[i];
+            inicio = i;
+        }
 
-        maximo = max(maximo, diferencias[i]);
-        inicio = i;
     }
 
     return vecinoMasCercano(matriz, inicio, n);
