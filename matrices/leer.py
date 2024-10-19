@@ -12,14 +12,14 @@ def leer_matriz_desde_txt(ruta_archivo):
     return matriz
 
 def convertir_a_formato_cpp(matriz):
-    formato_cpp = "std::vector<std::vector<double>> matriz = {\n"
+    formato_cpp = "vector<vector<double>> matriz76 = {\n"
     for fila in matriz:
         formato_cpp += "    {" + ", ".join(map(str, fila)) + "},\n"
     formato_cpp += "};"
     return formato_cpp
 
 # Ruta del archivo que contiene la matriz
-ruta_archivo = 'matriz72.txt'
+ruta_archivo = 'd:/Repositorios/Optimizacion/matrices/matrix76.txt'
 
 # Leer la matriz desde el archivo y convertirla al formato C++
 matriz = leer_matriz_desde_txt(ruta_archivo)
