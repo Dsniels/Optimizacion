@@ -1,8 +1,7 @@
 #include "algoritmo.h"
 #include <iostream>
 #include <algorithm>
-#include <climits>
-
+#include <unordered_set>
 using namespace std;
 
 IMB::IMB(vector<vector<double>> &m)
@@ -10,7 +9,7 @@ IMB::IMB(vector<vector<double>> &m)
     matrix = m;
 }
 
-int IMB::nodoMasCercano(int nodo)
+int IMB::nodoMasCercano(int& nodo)
 {
     int distanciaMin = INT32_MAX;
     int distancia;
@@ -30,7 +29,7 @@ int IMB::nodoMasCercano(int nodo)
     return next;
 }
 
-int IMB::delta(int i, int j, int m)
+int IMB::delta(int &i, int &j, int &m)
 {
     return matrix[subTour[j]][i] + matrix[i][subTour[m]] - matrix[subTour[j]][subTour[m]];
 }
@@ -47,14 +46,11 @@ int IMB::arcoMasBarato(int &Nodoj, int &costoFinal)
             {
                 int m = (j + 1) % subTour.size();
                 int costo = delta(i, j, m);
-                if (j != m)
+                if (j != m  && costo < costoMin)
                 {
-                    if (costo < costoMin)
-                    {
                         costoMin = costo;
                         Nodoj = subTour[m];
                         Kfinal = i;
-                    }
                 }
             }
         }
@@ -83,7 +79,6 @@ void printMessage(string message)
 {
     cout << message << endl;
 }
-
 
 void IMB::solucion()
 {
@@ -117,11 +112,8 @@ void IMB::solucion()
         printMessage("Costo del tour:", costoFinal);
         if (costoFinal < CostoMin)
         {
-            if (!solucionOptima.empty())
-            {
-                solucionOptima.pop_back();
-            }
-            solucionOptima.push_back(subTour);
+            solucionOptima.clear();
+            solucionOptima = subTour;
             CostoMin = costoFinal;
         }
 
@@ -129,6 +121,6 @@ void IMB::solucion()
     }
 
     printMessage("Solucion mas optima: ");
-    printTour(solucionOptima.back());
+    printTour(solucionOptima);
     printMessage("Costo min:", CostoMin);
 }

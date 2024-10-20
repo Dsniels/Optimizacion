@@ -8,7 +8,7 @@ using namespace std;
 class IMB {
     vector<vector<double>> matrix;
     vector<int> subTour;
-    vector<vector<int>> solucionOptima;
+    vector<int> solucionOptima;
     int CostoMin=INT32_MAX;
 
 
@@ -17,8 +17,8 @@ public:
     void solucion();
 
 private:
-    int delta(int i, int j,int m);
-    int nodoMasCercano(int nodo);
+    int delta(int &i, int &j,int &m);
+    int nodoMasCercano(int& nodo);
     int arcoMasBarato(int &j, int &costoFinal);
     void printTour(vector<int>&array);
 };
