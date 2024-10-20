@@ -18,7 +18,7 @@ public:
         centro.resize(100);
     };
 
-    void generarNums()
+    void productosMedios()
     {
         for (int i = 0; i < 100; i++)
         {
@@ -55,7 +55,7 @@ int main()
 
     RandomNums nums(x0, x1);
 
-    nums.generarNums();
+    nums.productosMedios();
 
     cin.get();
     cin.get();

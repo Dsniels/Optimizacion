@@ -3,7 +3,12 @@
 #include "matrices.h"
 using namespace std;
 
-
+vector<vector<double>> distancias = {
+    {0, 8, 3, 7, 10},
+    {8, 0, 5, 9, 4},
+    {3, 5, 0, 6, 7},
+    {7, 9, 6, 0, 9},
+    {10, 4, 7, 9, 0}};
 
 vector<vector<double>> matriz10 = {
     {0.0, 28.0, 41.0, 31.0, 61.0, 32.0, 21.0, 42.0, 8.0, 56.0},

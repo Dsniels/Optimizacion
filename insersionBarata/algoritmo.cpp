@@ -32,12 +32,10 @@ int IMB::nodoMasCercano(int nodo)
 
 int IMB::delta(int i, int j, int m)
 {
-    int incremento = matrix[subTour[j]][i] + matrix[i][subTour[m]] - matrix[subTour[j]][subTour[m]];
-
-    return incremento;
+    return matrix[subTour[j]][i] + matrix[i][subTour[m]] - matrix[subTour[j]][subTour[m]];
 }
 
-int IMB::arcoMasBarato(int &Nodoi, int &Nodoj, int &costoFinal)
+int IMB::arcoMasBarato(int &Nodoj, int &costoFinal)
 {
     int costoMin = INT32_MAX;
     int Kfinal = -1;
@@ -51,11 +49,9 @@ int IMB::arcoMasBarato(int &Nodoi, int &Nodoj, int &costoFinal)
                 int costo = delta(i, j, m);
                 if (j != m)
                 {
-                    //cout << "Delta de nodo " << i + 1 << " ente " << subTour[j] + 1 << " y " << subTour[m] + 1 << ": " << costo << endl;
                     if (costo < costoMin)
                     {
                         costoMin = costo;
-                        Nodoi = subTour[j];
                         Nodoj = subTour[m];
                         Kfinal = i;
                     }
@@ -65,24 +61,33 @@ int IMB::arcoMasBarato(int &Nodoi, int &Nodoj, int &costoFinal)
     }
     costoFinal += costoMin;
 
-    //cout << "K: " << Kfinal + 1 << endl;
     return Kfinal;
 }
 
-void IMB::printTour()
+void IMB::printTour(vector<int> &array)
 {
-    for (int nodo : subTour)
+    for (int nodo : array)
     {
         cout << (nodo + 1) << " ";
     }
     cout << endl;
 }
 
+template <typename T>
+void printMessage(string message, T valor)
+{
+    cout << message << " " << valor << " " << endl;
+}
+
+void printMessage(string message)
+{
+    cout << message << endl;
+}
+
+
 void IMB::solucion()
 {
-    int costoFinal;
-    int inicio;
-    int K;
+    int costoFinal, inicio, K;
     for (int i = 0; i < matrix.size(); i++)
     {
         costoFinal = 0;
@@ -90,34 +95,40 @@ void IMB::solucion()
         subTour.push_back(inicio);
 
         int next = nodoMasCercano(inicio);
-        //cout << "Primer Nodo: ";
-        //printTour();
-        //cout << "Nodo mas cercano " << next + 1 << endl;
-        //cout<<matrix[next][inicio]<<endl;
-
-        costoFinal = matrix[next][inicio]*2;
+        costoFinal = matrix[next][inicio] * 2;
 
         subTour.push_back(next);
         subTour.push_back(inicio);
 
         while (subTour.size() < matrix.size() + 1)
         {
-            int NodoI, NodoJ;
-            K = arcoMasBarato(NodoI, NodoJ, costoFinal);
-            auto it = find(subTour.begin() + 1, subTour.end() - 1, NodoJ);
-            if (it != subTour.end())
-            {
-           
+            int NodoJ;
+            K = arcoMasBarato(NodoJ, costoFinal);
 
-                subTour.insert(it, K);
-                //printTour();
+            auto posicion = find(subTour.begin() + 1, subTour.end() - 1, NodoJ);
+            if (posicion != subTour.end())
+            {
+                subTour.insert(posicion, K);
             }
         }
 
-        cout << "Solucion por nodo " << (inicio + 1) << ": ";
-        printTour();
+        printMessage("Solucion por nodo:", inicio + 1);
+        printTour(subTour);
+        printMessage("Costo del tour:", costoFinal);
+        if (costoFinal < CostoMin)
+        {
+            if (!solucionOptima.empty())
+            {
+                solucionOptima.pop_back();
+            }
+            solucionOptima.push_back(subTour);
+            CostoMin = costoFinal;
+        }
 
-        cout << "Costo del tour: " << costoFinal << endl;
         subTour.clear();
     }
+
+    printMessage("Solucion mas optima: ");
+    printTour(solucionOptima.back());
+    printMessage("Costo min:", CostoMin);
 }
