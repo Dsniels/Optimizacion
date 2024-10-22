@@ -11,8 +11,8 @@ int main()
     vector<vector<vector<double>>> matrices = {matriz10,matriz52,matriz76};
 
     for (auto& matriz : matrices) {
-        IMB imb(matriz);
-        imb.solucion();
+        TSP algoritmoIMB(matriz);
+        algoritmoIMB.solucionInsercionMasBarata();
     }
 
     cin.get();

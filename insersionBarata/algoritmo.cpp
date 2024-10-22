@@ -4,12 +4,12 @@
 #include <unordered_set>
 using namespace std;
 
-IMB::IMB(vector<vector<double>> &m)
+TSP::TSP(vector<vector<double>> &m)
 {
     matrix = m;
 }
 
-int IMB::nodoMasCercano(int &nodo)
+int TSP::nodoMasCercano(int &nodo)
 {
     int distanciaMin = INT32_MAX;
     int distancia;
@@ -29,12 +29,12 @@ int IMB::nodoMasCercano(int &nodo)
     return next;
 }
 
-int IMB::delta(int &i, int &j, int &m)
+int TSP::delta(int &i, int &j, int &m)
 {
     return matrix[subTour[j]][i] + matrix[i][subTour[m]] - matrix[subTour[j]][subTour[m]];
 }
 
-int IMB::arcoMasBarato(int &Nodoj, int &costoFinal)
+int TSP::arcoMasBarato(int &Nodoj, int &costoFinal)
 {
     int costoMin = INT32_MAX;
     int Kfinal = -1;
@@ -48,7 +48,6 @@ int IMB::arcoMasBarato(int &Nodoj, int &costoFinal)
                 if (subTour[j] != subTour[m])
                 {
                     int costo = delta(i, j, m);
-                    // cout << "Valor de delta en nodo: " << i + 1 << " Entre nodos " << "(" << subTour[j] + 1 << "," << subTour[m] + 1 << ") = " << costo << endl;
 
                     if (costo < costoMin)
                     {
@@ -66,7 +65,7 @@ int IMB::arcoMasBarato(int &Nodoj, int &costoFinal)
     return Kfinal;
 }
 
-void IMB::printTour(vector<int> &array)
+void TSP::printTour(vector<int> &array)
 {
     for (int nodo : array)
     {
@@ -86,7 +85,7 @@ void printMessage(string message)
     cout << message << endl;
 }
 
-void IMB::solucion()
+void TSP::solucionInsercionMasBarata()
 {
     int costoFinal, inicio, K;
     for (int i = 0; i < matrix.size(); i++)
@@ -101,7 +100,6 @@ void IMB::solucion()
         subTour.push_back(next);
 
         subTour.push_back(inicio);
-        // printTour(subTour);
         while (subTour.size() < matrix.size() + 1)
         {
             int NodoJ;
@@ -112,7 +110,6 @@ void IMB::solucion()
             {
 
                 subTour.insert(posicion, K);
-                // printTour(subTour);
             }
         }
 
@@ -132,4 +129,27 @@ void IMB::solucion()
     printMessage("Solucion mas optima: ");
     printTour(solucionOptima);
     printMessage("Costo min:", CostoMin);
+}
+
+
+
+void TSP::solucionInsersionMasCercana(){
+    int costoFinal, inicio, K;
+    for(int i = 0; i < matrix.size(); i++){
+        costoFinal = 0;
+        inicio = i;
+
+        subTour.push_back(inicio);
+
+        int next = nodoMasCercano(inicio);
+
+        subTour.push_back(next);
+        subTour.push_back(inicio);
+        costoFinal += matrix[inicio][next]*2;
+
+        while(subTour.size() < matrix.size()+1){
+            int nodoJ;
+
+        }
+    }
 }

@@ -1,11 +1,11 @@
-#ifndef ALGORITMOIMB
-#define ALGORITMOIMB
+#ifndef ALGORITMOTSP
+#define ALGORITMOTSP
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class IMB {
+class TSP {
     vector<vector<double>> matrix;
     vector<int> subTour;
     vector<int> solucionOptima;
@@ -13,9 +13,9 @@ class IMB {
 
 
 public:
-    IMB(vector<vector<double>>& m);
-    void solucion();
-
+    TSP(vector<vector<double>>& m);
+    void solucionInsercionMasBarata();
+    void solucionInsersionMasCercana();
 private:
     int delta(int &i, int &j,int &m);
     int nodoMasCercano(int& nodo);
