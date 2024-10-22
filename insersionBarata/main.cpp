@@ -8,7 +8,7 @@ int main()
 {
 
 
-    vector<vector<vector<double>>> matrices = {matriz76, matriz52, matriz10};
+    vector<vector<vector<double>>> matrices = {matriz10,matriz52,matriz76};
 
     for (auto& matriz : matrices) {
         IMB imb(matriz);

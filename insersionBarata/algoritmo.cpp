@@ -9,7 +9,7 @@ IMB::IMB(vector<vector<double>> &m)
     matrix = m;
 }
 
-int IMB::nodoMasCercano(int& nodo)
+int IMB::nodoMasCercano(int &nodo)
 {
     int distanciaMin = INT32_MAX;
     int distancia;
@@ -45,12 +45,18 @@ int IMB::arcoMasBarato(int &Nodoj, int &costoFinal)
             for (int j = 0; j < subTour.size(); j++)
             {
                 int m = (j + 1) % subTour.size();
-                int costo = delta(i, j, m);
-                if (j != m  && costo < costoMin)
+                if (subTour[j] != subTour[m])
                 {
+                    int costo = delta(i, j, m);
+                    // cout << "Valor de delta en nodo: " << i + 1 << " Entre nodos " << "(" << subTour[j] + 1 << "," << subTour[m] + 1 << ") = " << costo << endl;
+
+                    if (costo < costoMin)
+                    {
+
                         costoMin = costo;
                         Nodoj = subTour[m];
                         Kfinal = i;
+                    }
                 }
             }
         }
@@ -93,8 +99,9 @@ void IMB::solucion()
         costoFinal = matrix[next][inicio] * 2;
 
         subTour.push_back(next);
-        subTour.push_back(inicio);
 
+        subTour.push_back(inicio);
+        // printTour(subTour);
         while (subTour.size() < matrix.size() + 1)
         {
             int NodoJ;
@@ -103,7 +110,9 @@ void IMB::solucion()
             auto posicion = find(subTour.begin() + 1, subTour.end() - 1, NodoJ);
             if (posicion != subTour.end())
             {
+
                 subTour.insert(posicion, K);
+                // printTour(subTour);
             }
         }
 

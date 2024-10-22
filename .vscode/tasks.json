@@ -11,7 +11,7 @@
                 "${fileDirname}\\matrices.cpp",
                 "${fileDirname}\\algoritmo.cpp",
                 "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+                "${fileDirname}\\solucion.exe"
             ],
             "options": {
                 "cwd": "${fileDirname}"
