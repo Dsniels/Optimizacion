@@ -88,6 +88,7 @@ void printMessage(string message)
 void TSP::solucionInsercionMasBarata()
 {
     int costoFinal, inicio, K;
+
     for (int i = 0; i < matrix.size(); i++)
     {
         costoFinal = 0;

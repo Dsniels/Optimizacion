@@ -5,6 +5,8 @@
         "vector": "cpp",
         "string": "cpp",
         "ostream": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "xstring": "cpp",
+        "cmath": "cpp"
     }
 }
