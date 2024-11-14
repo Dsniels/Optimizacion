@@ -12,10 +12,10 @@ private:
     vector<string> num, centro;
 
 public:
-    RandomNums()
+    RandomNums(int n)
     {
-        num.resize(10);
-        centro.resize(10);
+        num.resize(n);
+        centro.resize(n);
     };
     int extraerCentros(int n, int i, int len)
     {
@@ -33,6 +33,7 @@ public:
     }
     void productosMedios(int cant)
     {
+        cout<<"Productos Medios: "<<endl;
         float r;
         int n;
         int x0, x1;
@@ -48,13 +49,14 @@ public:
             x1 = extraerCentros(n, i, 4);
 
             r = x1 / 10000.0;
-            cout << r << " " << endl;
+            cout << r << " " ;
 
             x0 = x1;
         }
     }
     void cuadradoMedios(int x0, int cant)
     {
+        cout<<endl<<"Cuadrado Medios: "<<endl;
         int y, x1, n;
         float r;
         for (int i = 0; i < cant; i++)
@@ -68,6 +70,7 @@ public:
     }
     void multiplicadorConstante(int x, int a, int cant)
     {
+        cout<<endl<<"Multiplicador Constante:"<<endl;
         float r;
         int X1, y;
         for (int i = 0; i < cant; i++)
@@ -75,7 +78,7 @@ public:
             y = a * x;
             X1 = extraerCentros(y, i, 3);
             r = X1 / 10000.0;
-            cout << r << " " << endl;
+            cout << r << " " ;
             x = X1;
         }
     }
@@ -83,12 +86,11 @@ public:
 
 int main()
 {
+    int n = 100;
 
-    RandomNums nums;
-
-    nums.productosMedios(100);
-     nums.multiplicadorConstante(9803, 6965,100);
-    nums.cuadradoMedios(5735, 5);
-    cin.get();
+    RandomNums nums(n);
+    nums.productosMedios(n);
+    nums.multiplicadorConstante(9803, 6965, n);
+    nums.cuadradoMedios(5735, 100);
     cin.get();
 }

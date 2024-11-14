@@ -8,5 +8,6 @@
         "future": "cpp",
         "xstring": "cpp",
         "cmath": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
