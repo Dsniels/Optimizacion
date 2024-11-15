@@ -1,7 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <unordered_set>
 #include <numeric>
+#include <climits>
 using namespace std;
 
 class MTVRP
@@ -11,6 +13,7 @@ private:
     int n;
     int trips;
     int tiempoEspera = 0;
+    unordered_set<int> visitados;
     vector<vector<int>> Distancias;
     vector<int> Demandas;
 
@@ -18,14 +21,7 @@ public:
     MTVRP(vector<vector<int>> &distancias, int k, int nb_trips, int len, vector<int> &demandas)
         : Distancias(distancias), Demandas(demandas), cap(k), n(len), trips(nb_trips) {};
 
-    void printRuta(vector<int> &arr)
-    {
-        for (auto i : arr)
-        {
-            cout << i << " ";
-        }
-        return;
-    }
+    
 
     int getTiempo()
     {
@@ -36,59 +32,107 @@ public:
     {
         vector<vector<int>> rutas;
         vector<int> clientes(n);
-
         iota(clientes.begin(), clientes.end(), 1);
+        int tiempoAcumulado = 0;
+        int latenciaPrimeraRuta =0;
 
         for (int trip = 0; trip < trips && !clientes.empty(); trip++)
         {
             vector<int> ruta = {0};
-            int carga_actual = 0;
+            int capAcumulada = 0;
 
-            for (auto it = clientes.begin(); it != clientes.end();)
+            while (true)
             {
-                int cliente = *it;
-                int demanda_cliente = Demandas[cliente - 1];
+                int prevCliente = ruta.back();
+                int latenciaMin = INT_MAX;
+                int nextCliente = -1;
 
-                if (carga_actual + demanda_cliente <= cap)
+                for (int cliente : clientes)
                 {
-                    ruta.push_back(cliente);
-                    carga_actual += demanda_cliente;
-                    it = clientes.erase(it);
+                    if (visitados.find(cliente) != visitados.end())
+                        continue;
+
+                    int demandaCliente = Demandas[cliente - 1];
+                    if (capAcumulada + demandaCliente > cap)
+                        continue;
+
+                    int latencia = latenciaDeRuta(ruta, cliente);
+                    if (latencia < latenciaMin)
+                    {
+                        latenciaMin = latencia;
+                        nextCliente = cliente;
+                    }
                 }
-                else
-                {
-                    ++it;
-                }
+
+                if (nextCliente == -1)
+                    break;
+
+                ruta.push_back(nextCliente);
+                capAcumulada += Demandas[nextCliente - 1];
+                visitados.insert(nextCliente);
+                clientes.erase(remove(clientes.begin(), clientes.end(), nextCliente), clientes.end());
+                // for (size_t i = 1; i < ruta.size(); ++i)
+                // {
+                //     int prev = ruta[i - 1];
+                //     int cur = ruta[i];
+                //     tiempoAcumulado += Distancias[prev][cur];
+                //     cout<<prev<<cur<<endl;
+                // }
+                // //tiempoEspera += calcLatencia(ruta);
+
+                // // tiempoEspera += tiempoAcumulado;
+                // if (trip == 0)
+                // {
+                //     latenciaPrimeraRuta += tiempoAcumulado;
+                // }
+                // else
+                // {
+                //     tiempoAcumulado += latenciaPrimeraRuta;
+                //     tiempoEspera += latenciaPrimeraRuta; 
+                // }
+
+                // cout<<"tiempo espera: "<<<<endl;
             }
+            tiempoEspera += Distancias[ruta.back()][0];
+            cout<<endl<<tiempoAcumulado<<endl;
             ruta.push_back(0);
             rutas.push_back(ruta);
-            tiempoEspera += calcTiempos(ruta);
         }
 
         return rutas;
-    };
+    }
 
 private:
-    calcTiempos(vector<int> &ruta)
+    int calcLatencia(vector<int> &ruta)
     {
-        int tiempo = 0;
         int tiempoTotal = 0;
+        int tiempo = 0;
         for (int i = 1; i < ruta.size(); ++i)
         {
             int prev = ruta[i - 1];
             int cur = ruta[i];
             tiempo += Distancias[prev][cur];
-            tiempoTotal += tiempo;
         }
 
+        return tiempo;
+    }
+
+    int latenciaDeRuta(vector<int> &ruta, int nuevoCliente)
+    {
+        int tiempo = calcLatencia(ruta);
+        int tiempoTotal = 0;
+
+        tiempo += Distancias[ruta.back()][nuevoCliente];
+        tiempoTotal += tiempo;
+
         return tiempoTotal;
-    };
+    }
 };
 
 int main()
 {
+    auto print = [](int &n){cout<<n<<" ";};
     vector<int> client_demands = {10, 20, 30, 10, 20, 10, 20, 30, 30, 30};
-
     vector<vector<int>> distances = {
         {0, 33, 54, 14, 70, 92, 79, 80, 61, 58, 14},
         {33, 0, 21, 18, 42, 58, 49, 55, 28, 27, 36},
@@ -103,18 +147,17 @@ int main()
         {14, 36, 57, 19, 64, 94, 85, 89, 63, 63, 0}};
 
     MTVRP mtvrp(distances, 120, 2, 10, client_demands);
-
+    clock_t compTime = clock();
     vector<vector<int>> rutas = mtvrp.getRutas();
     int tiempoTotal = mtvrp.getTiempo();
+    compTime = clock() - compTime;
     for (auto ruta : rutas)
     {
-        mtvrp.printRuta(ruta);
-        cout << endl;
+        for_each(ruta.begin(), ruta.end(), print);
+        cout<<endl;
+        
     }
-
-    cout << "Tiempo Total: " << tiempoTotal;
-
-    cin.get();
-
+    cout<< "Tiempo computacional: "<<(float)compTime/CLOCKS_PER_SEC<<endl;
+    cout << "Tiempo Total de Espera: " << tiempoTotal << endl;
     return 0;
 }
