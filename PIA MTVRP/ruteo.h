@@ -11,16 +11,16 @@ private:
     int cap;
     int n;
     int trips;
-    int tiempoEspera = 0;
+    int tiempoAcumulado = 0;
     unordered_set<int> visitados;
     vector<vector<double>> Distancias;
     vector<int> Demandas;
 
-    int calcLatencia(vector<int> &ruta);
+    void calcLatencia(vector<int> &ruta, int &acumulado);
     int latenciaDeRuta(vector<int> &ruta, int clienteNuevo);
 
 public:
-    MTVRP(vector<vector<double>>&distancias, int k, int nb_trips, int numClientes, vector<int>& demandas);
+    MTVRP(vector<vector<double>> &distancias, int k, int nb_trips, int numClientes, vector<int> &demandas);
     int getTiempo();
     vector<vector<int>> getRutas();
 };
