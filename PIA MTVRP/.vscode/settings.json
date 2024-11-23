@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "format": "cpp"
+        "*.cpp": "cpp",
+        "format": "cpp",
+        "ostream": "cpp"
     }
 }
