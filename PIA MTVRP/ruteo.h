@@ -8,20 +8,19 @@ using namespace std;
 class MTVRP
 {
 private:
-    int cap;
+    int cap = 0;
     int n;
-    int trips;
     int tiempoAcumulado = 0;
     unordered_set<int> visitados;
     vector<vector<double>> Distancias;
     vector<int> Demandas;
 
+    int getTiempo();
     void calcLatencia(vector<int> &ruta, int &acumulado);
     int latenciaDeRuta(vector<int> &ruta, int clienteNuevo);
 
 public:
-    MTVRP(vector<vector<double>> &distancias, int k, int nb_trips, int numClientes, vector<int> &demandas);
-    int getTiempo();
-    vector<vector<int>> getRutas();
+    MTVRP(vector<vector<double>> &distancias, int k, vector<int> &demandas);
+    void getRutas();
 };
 #endif

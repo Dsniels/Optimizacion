@@ -6,25 +6,30 @@
 #include <numeric>
 #include <climits>
 #include <ranges>
+#include <iomanip>
 
 auto printV = [](int &n)
 { cout << n << " "; };
 
-MTVRP::MTVRP(vector<vector<double>> &distancias, int k, int nb_trips, int len, vector<int> &demandas)
+MTVRP::MTVRP(vector<vector<double>> &distancias, int k, vector<int> &demandas)
     : Distancias(distancias),
-      Demandas(demandas), cap(k), n(len), trips(nb_trips) {};
+      Demandas(demandas), cap(k), n(demandas.size())
+{
+};
 
-MTVRP::getTiempo()
+int MTVRP::getTiempo()
 {
     return tiempoAcumulado;
 }
 
-vector<vector<int>> MTVRP::getRutas()
+void MTVRP::getRutas()
 {
-    vector<vector<int>> rutas;
-    vector<int> clientes(n);
-    iota(clientes.begin(), clientes.end(), 1);
+    clock_t compTime = clock();
 
+    vector<int> clientes(n);
+    vector<int> rutaAcumulada = {0};
+    iota(clientes.begin(), clientes.end(), 1);
+    int count = 0;
     while (!clientes.empty())
     {
         vector<int> ruta = {0};
@@ -34,71 +39,71 @@ vector<vector<int>> MTVRP::getRutas()
         {
             auto candidatos = clientes | std::views::filter([&](int cliente)
             { return visitados.find(cliente) == visitados.end() && capAcumulada + Demandas[cliente - 1] <= cap; });
+
             int latenciaMin = INT_MAX;
             int nextCliente = -1;
 
             for (auto cliente : candidatos)
             {
-                cout << cliente << endl;
                 int latencia = latenciaDeRuta(ruta, cliente);
 
                 if (latencia < latenciaMin)
                 {
                     latenciaMin = latencia;
                     nextCliente = cliente;
-                    cout << "nextCliente " << nextCliente << endl;
                 }
             }
 
             if (nextCliente == -1)
                 break;
+
+            rutaAcumulada.push_back(nextCliente);
             ruta.push_back(nextCliente);
             capAcumulada += Demandas[nextCliente - 1];
             visitados.insert(nextCliente);
             clientes.erase(remove(clientes.begin(), clientes.end(), nextCliente), clientes.end());
-            calcLatencia(ruta, tiempoAcumulado);
-            // cout << "Capacidad Acumulada: " << capAcumulada << endl;
+
+            calcLatencia(rutaAcumulada, tiempoAcumulado);
         }
-        tiempoAcumulado += Distancias[ruta.back()][0];
         ruta.push_back(0);
-
-        // cout << "Ruta final: ";
-        // for_each(ruta.begin(), ruta.end(), printV);
-        // cout << endl;
-        calcLatencia(ruta, tiempoAcumulado);
-        // cout << "Tiempo espera ruta " << tiempoAcumulado << endl;
-        rutas.push_back(ruta);
+        rutaAcumulada.push_back(0);
+        if (!clientes.empty())
+        {
+            calcLatencia(rutaAcumulada, tiempoAcumulado);
+        }
+        count++;
     }
-
-    return rutas;
+    compTime = clock() - compTime;
+    int tiempoTotal = this->getTiempo();
+    cout << "Numero de viajes: " << count << endl;
+    cout << endl;
+    cout << "Ruta Completa: ";
+    for_each(rutaAcumulada.begin(), rutaAcumulada.end(), printV);
+    cout << endl;
+    cout << fixed << setprecision(6);
+    cout << endl;
+    cout << "Tiempo computacional: " << (float)compTime / CLOCKS_PER_SEC << " Segs" << endl;
+    cout << "Tiempo Total de Espera: " << tiempoTotal << endl;
+    cout << endl;
+    cout << endl;
+    return;
 }
 
 void MTVRP::calcLatencia(vector<int> &ruta, int &tiempoAcumulado)
 {
-    // cout << "Tiempo espera incio for: " << tiempoAcumulado << endl;
-
     for (size_t j = 1; j < ruta.size(); ++j)
     {
-        // cout << "Clientes en ruta: ";
-        // for_each(ruta.begin(), ruta.end(), printV);
-        // cout << endl;
-        // cout << "se suman al acumulado: " << Distancias[ruta[j - 1]][ruta[j]] << endl;
-
         tiempoAcumulado += Distancias[ruta[j - 1]][ruta[j]];
-
-        // cout << "Tiempo espera sumado: " << tiempoAcumulado << endl;
     }
 };
 
-MTVRP::latenciaDeRuta(vector<int> &ruta, int nuevoCliente)
+int MTVRP::latenciaDeRuta(vector<int> &ruta, int nuevoCliente)
 {
     int tiempo = 0;
     int tiempoTotal = 0;
-    cout << "latencia print " << nuevoCliente << endl;
 
     for (size_t j = 1; j < ruta.size(); ++j)
     {
-        cout << "Tama;o riuta" << ruta.size() << endl;
         tiempo += Distancias[ruta[j - 1]][ruta[j]];
     }
 
