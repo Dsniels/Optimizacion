@@ -25,8 +25,8 @@ extern vector<int> VRPNC12_Demandas;
 extern vector<vector<double>> VRPNC12_Distancias;
 extern vector<int> VRPNC4_Demandas;
 extern vector<vector<double>> VRPNC4_Distancias;
-// extern vector<int> VRPNC5_Demandas;
-// extern vector<vector<double>> VRPNC5_Distancias;
-// extern vector<int> VRPNC11_Demandas;
-// extern vector<vector<double>> VRPNC11_Distancias;
+extern vector<int> VRPNC5_Demandas;
+extern vector<vector<double>> VRPNC5_Distancias;
+extern vector<int> VRPNC11_Demandas;
+extern vector<vector<double>> VRPNC11_Distancias;
 #endif

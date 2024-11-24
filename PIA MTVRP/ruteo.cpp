@@ -13,9 +13,8 @@ auto printV = [](int &n)
 
 MTVRP::MTVRP(vector<vector<double>> &distancias, int k, vector<int> &demandas)
     : Distancias(distancias),
-      Demandas(demandas), cap(k), n(demandas.size())
-{
-};
+      Demandas(demandas), cap(k), n(demandas.size()) {
+      };
 
 int MTVRP::getTiempo()
 {
@@ -38,7 +37,7 @@ void MTVRP::getRutas()
         while (true)
         {
             auto candidatos = clientes | std::views::filter([&](int cliente)
-            { return visitados.find(cliente) == visitados.end() && capAcumulada + Demandas[cliente - 1] <= cap; });
+                                                            { return visitados.find(cliente) == visitados.end() && capAcumulada + Demandas[cliente - 1] <= cap; });
 
             int latenciaMin = INT_MAX;
             int nextCliente = -1;
