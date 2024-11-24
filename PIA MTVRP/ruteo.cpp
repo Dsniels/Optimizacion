@@ -26,18 +26,17 @@ void MTVRP::getRutas()
     clock_t compTime = clock();
 
     vector<int> clientes(n);
-    vector<int> rutaAcumulada = {0};
+    vector<int> ruta = {0};
     iota(clientes.begin(), clientes.end(), 1);
     int count = 0;
     while (!clientes.empty())
     {
-        vector<int> ruta = {0};
         int capAcumulada = 0;
 
         while (true)
         {
             auto candidatos = clientes | std::views::filter([&](int cliente)
-                                                            { return visitados.find(cliente) == visitados.end() && capAcumulada + Demandas[cliente - 1] <= cap; });
+            { return visitados.find(cliente) == visitados.end() && capAcumulada + Demandas[cliente - 1] <= cap; });
 
             int latenciaMin = INT_MAX;
             int nextCliente = -1;
@@ -56,31 +55,28 @@ void MTVRP::getRutas()
             if (nextCliente == -1)
                 break;
 
-            rutaAcumulada.push_back(nextCliente);
             ruta.push_back(nextCliente);
             capAcumulada += Demandas[nextCliente - 1];
             visitados.insert(nextCliente);
             clientes.erase(remove(clientes.begin(), clientes.end(), nextCliente), clientes.end());
-            this->calcLatencia(rutaAcumulada, tiempoAcumulado);
+            this->calcLatencia(ruta, tiempoAcumulado);
         }
-               ruta.push_back(0);
-        rutaAcumulada.push_back(0);
+        ruta.push_back(0);
         if (!clientes.empty())
         {
-            this->calcLatencia(rutaAcumulada, tiempoAcumulado);
+            this->calcLatencia(ruta, tiempoAcumulado);
         }
  
         count++;
     }
     compTime = clock() - compTime;
     int tiempoTotal = this->getTiempo();
+    cout<<"Numero de Clientes: "<<n<<endl;
     cout << "Numero de viajes: " << count << endl;
-    cout << endl;
     cout << "Ruta Completa: ";
-    for_each(rutaAcumulada.begin(), rutaAcumulada.end(), printV);
+    for_each(ruta.begin(), ruta.end(), printV);
     cout << endl;
     cout << fixed << setprecision(30);
-    cout << endl;
     cout << "Tiempo computacional: " << (float)compTime / CLOCKS_PER_SEC << " Segs" << endl;
     cout << "Tiempo Total de Espera: " << tiempoTotal << endl;
     cout << endl;
@@ -90,10 +86,8 @@ void MTVRP::getRutas()
 
 void MTVRP::calcLatencia(vector<int> &ruta, int &tiempoAcumulado)
 {
-    int tiempo = 0;
     for (int j = 1; j < ruta.size(); ++j)
     {
-        tiempo += Distancias[ruta[j - 1]][ruta[j]];
         tiempoAcumulado += Distancias[ruta[j - 1]][ruta[j]];
     }
 };
@@ -101,11 +95,6 @@ void MTVRP::calcLatencia(vector<int> &ruta, int &tiempoAcumulado)
 int MTVRP::latenciaDeRuta(vector<int> &ruta, int nuevoCliente)
 {
     int tiempo = 0;
-    int tiempoTotal = 0;
-
-
     tiempo += Distancias[ruta.back()][nuevoCliente];
-    tiempoTotal += tiempo;
-
-    return tiempoTotal;
+    return tiempo;
 };
