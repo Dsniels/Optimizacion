@@ -1,3 +1,4 @@
+#pragma once
 #ifndef RUTEO
 #define RUTEO
 #include <iostream>

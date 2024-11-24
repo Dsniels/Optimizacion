@@ -44,7 +44,7 @@ void MTVRP::getRutas()
 
             for (auto cliente : candidatos)
             {
-                int latencia = latenciaDeRuta(ruta, cliente);
+                int latencia = this->latenciaDeRuta(ruta, cliente);
 
                 if (latencia < latenciaMin)
                 {
@@ -61,15 +61,15 @@ void MTVRP::getRutas()
             capAcumulada += Demandas[nextCliente - 1];
             visitados.insert(nextCliente);
             clientes.erase(remove(clientes.begin(), clientes.end(), nextCliente), clientes.end());
-
-            calcLatencia(rutaAcumulada, tiempoAcumulado);
+            this->calcLatencia(rutaAcumulada, tiempoAcumulado);
         }
-        ruta.push_back(0);
+               ruta.push_back(0);
         rutaAcumulada.push_back(0);
         if (!clientes.empty())
         {
-            calcLatencia(rutaAcumulada, tiempoAcumulado);
+            this->calcLatencia(rutaAcumulada, tiempoAcumulado);
         }
+ 
         count++;
     }
     compTime = clock() - compTime;
@@ -79,7 +79,7 @@ void MTVRP::getRutas()
     cout << "Ruta Completa: ";
     for_each(rutaAcumulada.begin(), rutaAcumulada.end(), printV);
     cout << endl;
-    cout << fixed << setprecision(6);
+    cout << fixed << setprecision(30);
     cout << endl;
     cout << "Tiempo computacional: " << (float)compTime / CLOCKS_PER_SEC << " Segs" << endl;
     cout << "Tiempo Total de Espera: " << tiempoTotal << endl;
@@ -90,8 +90,10 @@ void MTVRP::getRutas()
 
 void MTVRP::calcLatencia(vector<int> &ruta, int &tiempoAcumulado)
 {
-    for (size_t j = 1; j < ruta.size(); ++j)
+    int tiempo = 0;
+    for (int j = 1; j < ruta.size(); ++j)
     {
+        tiempo += Distancias[ruta[j - 1]][ruta[j]];
         tiempoAcumulado += Distancias[ruta[j - 1]][ruta[j]];
     }
 };
@@ -101,10 +103,6 @@ int MTVRP::latenciaDeRuta(vector<int> &ruta, int nuevoCliente)
     int tiempo = 0;
     int tiempoTotal = 0;
 
-    for (size_t j = 1; j < ruta.size(); ++j)
-    {
-        tiempo += Distancias[ruta[j - 1]][ruta[j]];
-    }
 
     tiempo += Distancias[ruta.back()][nuevoCliente];
     tiempoTotal += tiempo;
