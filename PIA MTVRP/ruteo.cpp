@@ -58,7 +58,8 @@ void MTVRP::getRutas()
             ruta.push_back(nextCliente);
             capAcumulada += Demandas[nextCliente - 1];
             visitados.insert(nextCliente);
-            clientes.erase(remove(clientes.begin(), clientes.end(), nextCliente), clientes.end());
+            auto pos = find(clientes.begin(), clientes.end(), nextCliente);
+            if(pos != clientes.end()) clientes.erase(pos);
             this->calcLatencia(ruta, tiempoAcumulado);
         }
         ruta.push_back(0);
